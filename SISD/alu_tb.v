@@ -1,5 +1,4 @@
 `include "alu.v"
-
 `timescale 1us/1ns
 
 `ifndef SYNTHESIS
