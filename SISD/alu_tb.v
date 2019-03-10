@@ -2,6 +2,8 @@
 
 `timescale 1us/1ns
 
+`ifndef SYNTHESIS
+
 module alu_tb;
 
 	integer i, z = 0;
@@ -21,14 +23,27 @@ module alu_tb;
 	task test_alu;
 	begin
 		$display("Complete ALU test...");
-		for (i = 0; i< 255; i = i+1) begin
-			for (z = 0; z< 255; z = z+1) begin
+		for (i = 0; i< 256; i = i+1) begin
+			for (z = 0; z< 256; z = z+1) begin
 				r_s2 <= z;
 				r_s1 <= i;
 				#5;
 				if (w_result != r_s2 + r_s1)
 				begin
-					$display("%m Error %d x %d != %d", r_s1, r_s2, w_result);
+					#10
+					$display("%m Error %d + %d != %d", r_s1, r_s2, w_result);
+					$finish;
+				end
+				if ((r_s2 + r_s1 > 255) & !w_overflow)
+				begin
+					#10
+					$display("%m Overflow expected at %d + %d", r_s1, r_s2);
+					$finish;
+				end
+				if ((r_s2 + r_s1 < 256) & w_overflow)
+				begin
+					#10
+					$display("%m Overflow occured without reason at %d + %d", r_s1, r_s2);
 					$finish;
 				end
 				#5;
@@ -56,7 +71,7 @@ module alu_tb;
 	$dumpfile("mydump.vcd");
 	$dumpvars(0, uut);
 	$display("Start simulation");
-	r_func <= 3'b000;
+	r_func <= 3'b001;
 	#10;
 	test_alu();
 	#10;
@@ -65,3 +80,4 @@ module alu_tb;
 	end
 
 endmodule
+`endif
