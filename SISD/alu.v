@@ -2,7 +2,7 @@
  * @file alu.v
  * @brief Arithmetic-logic unit
  */
-`include "alu_uadd.v"
+`include "alu_uadd-rtl.v"
 `timescale 1us/1ns
 
 module alu
