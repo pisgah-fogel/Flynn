@@ -22,3 +22,8 @@ a.out:
 
 clean:
 	rm a.out mydump.vcd
+	rm alu.blif
+
+synthesis:
+	yosys -p "synth_ice40 -blif alu.blif" alu.v
+
