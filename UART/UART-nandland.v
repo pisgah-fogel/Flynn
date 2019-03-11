@@ -2,16 +2,16 @@
 
 // CLKS_PER_BIT (10000000)/(115200) = 87
 module uart_tx 
-  #(parameter CLKS_PER_BIT)
   (
-   input       i_Clock,
-   input       i_Tx_DV,
+   input [0:0] i_Clock,
+   input [0:0] i_Tx_DV,
    input [7:0] i_Tx_Byte, 
-   output      o_Tx_Active,
-   output reg  o_Tx_Serial,
-   output      o_Tx_Done
+   output [0:0] o_Tx_Active,
+   output reg [0:0] o_Tx_Serial,
+   output [0:0] o_Tx_Done
    );
   
+  parameter CLKS_PER_BIT   = 87;
   parameter s_IDLE         = 3'b000;
   parameter s_TX_START_BIT = 3'b001;
   parameter s_TX_DATA_BITS = 3'b010;
@@ -137,14 +137,14 @@ endmodule
 
 // CLKS_PER_BIT (10000000)/(115200) = 87
 module uart_rx 
-  #(parameter CLKS_PER_BIT)
   (
-   input        i_Clock,
-   input        i_Rx_Serial,
-   output       o_Rx_DV,
+   input [0:0] i_Clock,
+   input [0:0] i_Rx_Serial,
+   output [0:0] o_Rx_DV,
    output [7:0] o_Rx_Byte
    );
     
+  parameter CLKS_PER_BIT   = 87;
   parameter s_IDLE         = 3'b000;
   parameter s_RX_START_BIT = 3'b001;
   parameter s_RX_DATA_BITS = 3'b010;
