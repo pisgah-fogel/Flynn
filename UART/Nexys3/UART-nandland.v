@@ -19,8 +19,8 @@ module uart_tx
   parameter s_CLEANUP      = 3'b100;
    
   reg [2:0]    r_SM_Main     = 0;
-  reg [7:0]    r_Clock_Count = 0;
-  reg [2:0]    r_Bit_Index   = 0;
+  reg [10:0]    r_Clock_Count = 0;
+  reg [3:0]    r_Bit_Index   = 0;
   reg [7:0]    r_Tx_Data     = 0;
   reg          r_Tx_Done     = 0;
   reg          r_Tx_Active   = 0;
@@ -154,8 +154,8 @@ module uart_rx
   reg           r_Rx_Data_R = 1'b1;
   reg           r_Rx_Data   = 1'b1;
    
-  reg [7:0]     r_Clock_Count = 0;
-  reg [2:0]     r_Bit_Index   = 0; //8 bits total
+  reg [10:0]     r_Clock_Count = 0;
+  reg [3:0]     r_Bit_Index   = 0; //8 bits total
   reg [7:0]     r_Rx_Byte     = 0;
   reg           r_Rx_DV       = 0;
   reg [2:0]     r_SM_Main     = 0;

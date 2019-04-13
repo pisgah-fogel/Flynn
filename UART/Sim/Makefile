@@ -23,7 +23,15 @@ a.out:
 clean:
 	rm a.out mydump.vcd
 	rm uart.blif
+	rm top_module.blif
 
 synthesis:
 	yosys -p "synth_ice40 -blif uart.blif" UART-nandland.v
+
+top:
+	$(CC) $(ARGS) top_module_tb.v
+	./a.out
+	gtkwave mydump.vcd
+
+	
 
