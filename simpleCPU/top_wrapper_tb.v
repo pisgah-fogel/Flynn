@@ -8,7 +8,7 @@ module top_wrapper_tb ();
 
 	reg r_clk = 0;
 	wire [7:0] w_led;
-	reg [4:0] r_btn = 0;
+	reg [4:0] r_btn = 5'b00001;
 	reg [7:0] r_sw = 0;
 
 	always
@@ -30,7 +30,7 @@ module top_wrapper_tb ();
 		$dumpvars(0, WRAPPER_INST);
 		$display("Start simulation");
 		#1000;
-		r_btn <= 5'b00001;
+		r_btn <= 5'b00000;
 		#10000;
 		$finish;
 	end
