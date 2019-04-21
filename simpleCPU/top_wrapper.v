@@ -55,6 +55,7 @@ module top_wrapper
 		)
 		ROM_INST
 		(
+		.clk(i_clk),
 		.addr(w_rom_addr),
 		.DO(w_rom_data),
 		.EN(w_rom_en)
@@ -66,6 +67,7 @@ module top_wrapper
 		)
 		RAM_INST
 		(
+		.clk(i_clk),
 		.addr(w_ram_addr),
 		.DO(w_ram_data_i),
 		.DI(w_ram_data_o),

@@ -1,6 +1,7 @@
 `timescale 1ns/10ps
 
 module rom (
+	clk,
 	addr,
 	DO, // data out
 	EN, // enable
@@ -9,13 +10,24 @@ module rom (
 parameter AddrSize = 11;
 parameter WordSize = 9;
 
+input clk;
 input [AddrSize-1:0] addr;
-output [WordSize-1:0] DO;
+output reg [WordSize-1:0] DO;
+reg [WordSize-1:0] r_DO;
 input EN;
 
 reg [WordSize-1:0] Mem [0:(1<<AddrSize)-1];
 
-assign DO = (EN) ? Mem[addr] : {WordSize{1'bz}};
+always @ (posedge clk)
+	DO <= r_DO;
+
+always @ (posedge clk)
+begin
+	if (EN)
+		r_DO <= Mem[addr];
+	else
+		r_DO <= {WordSize{1'bz}};
+end
 
 initial begin
 	$display("Loading rom.");
