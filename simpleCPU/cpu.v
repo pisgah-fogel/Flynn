@@ -1,5 +1,18 @@
 `timescale 1ns/10ps
 
+// Instruction set (9b):
+// LD  | V V V V V V V V 1 | R0 <- V
+// MOV | A A A B B B 0 0 0 | A <- B
+// CMP | A A A B B B 0 1 0 | CMP A and B
+// JE  | V V V V V 0 1 1 0 | PC <- V if FE=1
+// JMP | V V V V V 0 1 0 0 | PC <- V
+// ADD | 0 0 0 0 0 1 0 0 0 | R0 <- R0 + R1
+// AND | 0 0 0 0 0 1 0 0 1 | R0 <- R0 & R1
+// OR  | 0 0 0 0 0 1 0 1 1 | R0 <- R0 | R1
+// NOT | 0 0 0 0 0 1 0 1 0 | R0 <- ! R0
+// XOR | 0 0 0 0 0 1 1 0 0 | R0 <- R0 ^ R1
+// NOP | 0 0 0 0 0 1 1 0 1 | 
+
 module cpu
 	#(
 	parameter g_ROM_WIDTH = 11,
@@ -25,7 +38,7 @@ module cpu
 
 	// Registers
 	reg [15:0] r_pc; // program counter
-	reg [7:0] r_gpr[15:0]; // 16 general purpose registers
+	reg [7:0] r_gpr[7:0]; // 8 general purpose registers
 
 	reg [g_ROM_ADDR-1:0] r_rom_addr;
 
