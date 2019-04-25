@@ -2,16 +2,19 @@
 
 // Instruction set (9b):
 // LD  | V V V V V V V V 1 | R0 <- V
-// MOV | A A A B B B 0 0 0 | A <- B
-// CMP | A A A B B B 0 1 0 | CMP A and B
-// JE  | V V V V V 0 1 1 0 | PC <- V if FE=1
-// JMP | V V V V V 0 1 0 0 | PC <- V
-// ADD | 0 0 0 0 0 1 0 0 0 | R0 <- R0 + R1
-// AND | 0 0 0 0 0 1 0 0 1 | R0 <- R0 & R1
-// OR  | 0 0 0 0 0 1 0 1 1 | R0 <- R0 | R1
-// NOT | 0 0 0 0 0 1 0 1 0 | R0 <- ! R0
-// XOR | 0 0 0 0 0 1 1 0 0 | R0 <- R0 ^ R1
-// NOP | 0 0 0 0 0 1 1 0 1 | 
+// MOV | A A A B B B 1 0 0 | A <- B
+// CMP | A A A B B B 1 1 0 | CMP A and B
+// JE  | 0 0 0 0 0 1 0 0 0 | PC <- R1, R0 if FE=1 (flag equals)
+// JG  | 0 0 0 0 1 1 0 0 0 | PC <- R1, R0 if FG=1 (flag greater)
+// JL  | 0 0 0 1 0 1 0 0 0 | PC <- R1, R0 if FL=1 (flag lower)
+// JMP | 0 0 0 1 1 1 0 0 0 | PC <- R1, R0
+// ADD | 0 0 1 0 0 1 0 0 0 | R0 <- R0 + R1
+// AND | 0 0 1 0 1 1 0 0 0 | R0 <- R0 & R1
+// OR  | 0 0 1 1 0 1 0 0 0 | R0 <- R0 | R1
+// NOT | 0 0 1 1 1 1 0 0 0 | R0 <- ! R0
+// XOR | 0 1 0 0 0 1 0 0 0 | R0 <- R0 ^ R1
+// LDR | 0 1 0 0 1 1 0 0 0 | R0 <- [R1, R0]
+// NOP | 0 1 0 1 0 1 0 0 0 | 
 
 module cpu
 	#(
