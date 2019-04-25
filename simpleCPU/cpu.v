@@ -13,8 +13,9 @@
 // OR  | 0 0 1 1 0 1 0 0 0 | R0 <- R0 | R1
 // NOT | 0 0 1 1 1 1 0 0 0 | R0 <- ! R0
 // XOR | 0 1 0 0 0 1 0 0 0 | R0 <- R0 ^ R1
-// LDR | 0 1 0 0 1 1 0 0 0 | R0 <- [R1, R0]
-// NOP | 0 1 0 1 0 1 0 0 0 | 
+// LDR | 0 1 0 0 1 1 0 0 0 | R0 <- RAM[R2, R1]
+// STR | 0 1 0 1 0 1 0 0 0 | RAM[R2, R1] <- R0
+// NOP | 0 1 0 1 1 1 0 0 0 | 
 
 module cpu
 	#(
@@ -39,25 +40,38 @@ module cpu
 	input [g_RAM_WIDTH-1:0] i_ram_data
 	);
 
+	// alias
+	wire [8:0] w_instruction;
+
 	// Registers
 	reg [15:0] r_pc; // program counter
 	reg [7:0] r_gpr[7:0]; // 8 general purpose registers
 
-	reg [g_ROM_ADDR-1:0] r_rom_addr;
+	assign o_rom_addr = r_pc; //[g_ROM_ADDR-1:0]
+	assign w_instruction = i_rom_data;
 
-	assign o_rom_addr = r_rom_addr;
-
+	// instruction decoder
 	always @ (posedge i_clk or i_rst)
 	begin
 		if (i_rst == 1'b1)
 		begin
-			r_rom_addr <= 0;
+			o_ram_en <= 1'b0;
+			o_rom_en <= 1'b0;
 		end
 		else
 		begin
-			r_rom_addr <= r_rom_addr + 1;
 			o_ram_en <= 1'b1;
 			o_rom_en <= 1'b1;
+			casex(w_instruction)
+				9'bxxxxxxxx_1: // LD
+				begin
+				end
+				9'bxxx_xxx_100: // MOV
+				9'bxxx_xxx_110: // CMP
+				9'b0000_0100_0: // JE
+				
+			endcase
+			
 		end
 	end
 
