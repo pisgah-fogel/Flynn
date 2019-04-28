@@ -19,10 +19,10 @@
 
 module cpu
 	#(
-	parameter g_ROM_WIDTH = 11,
-	parameter g_ROM_ADDR = 9,
-	parameter g_RAM_WIDTH = 11,
-	parameter g_RAM_ADDR = 9
+	parameter g_ROM_WIDTH = 9,
+	parameter g_ROM_ADDR = 11,
+	parameter g_RAM_WIDTH = 9,
+	parameter g_RAM_ADDR = 11
 	)
 	(
 	input i_clk,
@@ -46,6 +46,10 @@ module cpu
 	// Registers
 	reg [15:0] r_pc; // program counter
 	reg [7:0] r_gpr[7:0]; // 8 general purpose registers
+	reg r_FE = 1'b0;
+	reg r_FG = 1'b0;
+	reg r_FL = 1'b0;
+	reg r_C = 1'b0;
 
 	assign o_rom_addr = r_pc; //[g_ROM_ADDR-1:0]
 	assign w_instruction = i_rom_data;
@@ -65,11 +69,78 @@ module cpu
 			casex(w_instruction)
 				9'bxxxxxxxx_1: // LD
 				begin
+					r_gpr[0] <= w_instruction[9:1];
 				end
 				9'bxxx_xxx_100: // MOV
+				begin
+					r_gpr[w_instruction[9:7]] <= r_gpr[w_instruction[6:4]];
+				end
 				9'bxxx_xxx_110: // CMP
+				begin
+					if (r_gpr[w_instruction[9:7]] == r_gpr[w_instruction[6:4]])
+						r_FE <= 1'b1;
+					else
+						r_FE <= 1'b0;
+					if (r_gpr[w_instruction[9:7]] > r_gpr[w_instruction[6:4]])
+						r_FG <= 1'b1;
+					else
+						r_FG <= 1'b0;
+					if (r_gpr[w_instruction[9:7]] < r_gpr[w_instruction[6:4]])
+						r_FL <= 1'b1;
+					else
+						r_FL <= 1'b0;
+				end
 				9'b0000_0100_0: // JE
-				
+				begin
+					if (r_FE == 1'b1)
+						r_pc <= {r_gpr[1], r_gpr[0]};
+				end
+				9'b0000_1100_0: // JG
+				begin
+					if (r_FG == 1'b1)
+						r_pc <= {r_gpr[1], r_gpr[0]};
+				end
+				9'b0001_0100_0: // JL
+				begin
+					if (r_FL == 1'b1)
+						r_pc <= {r_gpr[1], r_gpr[0]};
+				end
+				9'b0001_1100_0: // JMP
+				begin
+					r_pc <= {r_gpr[1], r_gpr[0]};
+				end
+				9'b0010_0100_0: // ADD
+				begin
+					{r_C, r_gpr[0]} <= r_gpr[0] + r_gpr[1];
+				end
+				9'b0010_1100_0: // AND
+				begin
+					r_gpr[0] <= r_gpr[0] & r_gpr[1];
+				end
+				9'b0011_0100_0: // OR
+				begin
+					r_gpr[0] <= r_gpr[0] | r_gpr[1];
+				end
+				9'b0011_1100_0: // NOT
+				begin
+					r_gpr[0] <= ! r_gpr[0];
+				end
+				9'b0100_0100_0: // XOR
+				begin
+					r_gpr[0] <= r_gpr[0] ^ r_gpr[1];
+				end
+				9'b0100_1100_0: // LDR
+				begin
+				end
+				9'b0101_0100_0: // STR
+				begin
+				end
+				9'b0101_1100_0: // NOP
+				begin
+				end
+				default:
+				begin
+				end
 			endcase
 			
 		end
