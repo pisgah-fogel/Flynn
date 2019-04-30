@@ -44,12 +44,31 @@ module cpu
 	wire [8:0] w_instruction;
 
 	// Registers
-	reg [15:0] r_pc; // program counter
+	reg [15:0] r_pc = 0; // program counter
 	reg [7:0] r_gpr[7:0]; // 8 general purpose registers
 	reg r_FE = 1'b0;
 	reg r_FG = 1'b0;
 	reg r_FL = 1'b0;
 	reg r_C = 1'b0;
+
+	// debug
+	wire [7:0] w_r0;
+	wire [7:0] w_r1;
+	wire [7:0] w_r2;
+	wire [7:0] w_r3;
+	wire [7:0] w_r4;
+	wire [7:0] w_r5;
+	wire [7:0] w_r6;
+	wire [7:0] w_r7;
+
+	assign w_r0 = r_gpr[0];
+	assign w_r1 = r_gpr[1];
+	assign w_r2 = r_gpr[2];
+	assign w_r3 = r_gpr[3];
+	assign w_r4 = r_gpr[4];
+	assign w_r5 = r_gpr[5];
+	assign w_r6 = r_gpr[6];
+	assign w_r7 = r_gpr[7];
 
 	assign o_rom_addr = r_pc; //[g_ROM_ADDR-1:0]
 	assign w_instruction = i_rom_data;
@@ -61,31 +80,33 @@ module cpu
 		begin
 			o_ram_en <= 1'b0;
 			o_rom_en <= 1'b0;
+			r_pc <= 0;
 		end
 		else
 		begin
 			o_ram_en <= 1'b1;
 			o_rom_en <= 1'b1;
+			r_pc <= r_pc+1;
 			casex(w_instruction)
 				9'bxxxxxxxx_1: // LD
 				begin
-					r_gpr[0] <= w_instruction[9:1];
+					r_gpr[0] <= w_instruction[8:1];
 				end
 				9'bxxx_xxx_100: // MOV
 				begin
-					r_gpr[w_instruction[9:7]] <= r_gpr[w_instruction[6:4]];
+					r_gpr[w_instruction[8:6]] <= r_gpr[w_instruction[5:3]];
 				end
 				9'bxxx_xxx_110: // CMP
 				begin
-					if (r_gpr[w_instruction[9:7]] == r_gpr[w_instruction[6:4]])
+					if (r_gpr[w_instruction[8:6]] == r_gpr[w_instruction[5:3]])
 						r_FE <= 1'b1;
 					else
 						r_FE <= 1'b0;
-					if (r_gpr[w_instruction[9:7]] > r_gpr[w_instruction[6:4]])
+					if (r_gpr[w_instruction[8:6]] > r_gpr[w_instruction[5:3]])
 						r_FG <= 1'b1;
 					else
 						r_FG <= 1'b0;
-					if (r_gpr[w_instruction[9:7]] < r_gpr[w_instruction[6:4]])
+					if (r_gpr[w_instruction[8:6]] < r_gpr[w_instruction[5:3]])
 						r_FL <= 1'b1;
 					else
 						r_FL <= 1'b0;
