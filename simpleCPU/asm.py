@@ -116,6 +116,8 @@ try:
 		with open(outputfile, "w") as outfile:
 			for inst in output:
 				outfile.write(inst+"\n")
+			for i in range(0, 2048-len(output)):
+				outfile.write("000000000\n")
 			print("Saved to %s" % outputfile)
 		
 except FileNotFoundError:
