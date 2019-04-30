@@ -75,7 +75,6 @@ try:
 		output = []
 		data = f.readlines()
 		for line in data:
-			print(line)
 			words = line.split()
 			if words[0] == "LD":
 				output.append(addr_to_bin(words[1]) + "1")
@@ -112,8 +111,12 @@ try:
 				exit()
 		print("Done")
 		print("%d instructions" % len(output))
-		print("----------------")
-		print(output)
+		print("%d bits" % (len(output)*9))
+
+		with open(outputfile, "w") as outfile:
+			for inst in output:
+				outfile.write(inst+"\n")
+			print("Saved to %s" % outputfile)
 		
 except FileNotFoundError:
 	print("File %s not found" % inputfile)
