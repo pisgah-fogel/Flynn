@@ -1,11 +1,45 @@
+#
+# Makefile can be used either on Linux or Windows
+# Please install cygwin or gitbash for window in order to have bash
+# Please install icarus
+#
+#
+# Complete with Linux or Win64 depending on your system
+OS = "LINUX"
+
+SHELL := /bin/bash # required for advanced scripting
+
+# Setup depends of the operating system
+ifeq ($(OS), Win64)
+	IVERILOG = "iverilog"
+	VVP = "vvp.exe"
+else
+	IVERILOG = "iverilog"
+	VVP = "vvp"
+endif
+
+# Update thoses lines if you need to
+SRC = "hello_world.v"
+OUTPUT = "hello.o"
+
 .PHONY: all
-all:
-	iverilog -o hello.o hello_world.v
+all: ${OUTPUT}
 
 .PHONY: run
-run:
-	vvp.exe hello.o
+run: ${OUTPUT}
+	${VVP} ${OUTPUT}
 
 .PHONY: clean
 clean:
-	rm hello.o
+	@{ \
+		if [ -f ${OUTPUT} ]; \
+		then \
+			rm ${OUTPUT}; \
+		else \
+			echo "Nothing to clean"; \
+		fi; \
+	}
+
+
+${OUTPUT}:
+	${IVERILOG} -o ${OUTPUT} ${SRC}
