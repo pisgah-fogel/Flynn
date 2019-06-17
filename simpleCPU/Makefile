@@ -27,11 +27,3 @@ clean:
 
 synthesis:
 	yosys -p "synth_ice40 -blif cpu.blif" cpu.v
-
-top:
-	$(CC) $(ARGS) top_wrapper_tb.v
-	./a.out
-	gtkwave mydump.vcd
-
-	
-
