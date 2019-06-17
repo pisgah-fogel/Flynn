@@ -33,14 +33,17 @@ module cpu
 	input [g_ROM_WIDTH-1:0] i_rom_data,
 
 	output reg o_ram_en,
-	output reg o_ram_we,
-	output reg o_ram_re,
-	output reg [g_RAM_ADDR-1:0] o_ram_addr,
-	output reg [g_RAM_WIDTH-1:0] o_ram_data,
+	output wire o_ram_we,
+	output wire o_ram_re,
+	output wire [g_RAM_ADDR-1:0] o_ram_addr,
+	output wire [g_RAM_WIDTH-1:0] o_ram_data,
 	input [g_RAM_WIDTH-1:0] i_ram_data
 	);
 
-	// alias
+	// Signals
+	reg r_ram_we = 1'b0;
+
+	// Alias
 	wire [8:0] w_instruction;
 
 	// Registers
@@ -51,7 +54,7 @@ module cpu
 	reg r_FL = 1'b0;
 	reg r_C = 1'b0;
 
-	// debug
+	// Debug
 	wire [7:0] w_r0;
 	wire [7:0] w_r1;
 	wire [7:0] w_r2;
@@ -72,6 +75,10 @@ module cpu
 
 	assign o_rom_addr = r_pc; //[g_ROM_ADDR-1:0]
 	assign w_instruction = i_rom_data;
+	assign o_ram_data = r_gpr[0]; // used in STR
+	assign o_ram_re = !r_ram_we;
+	assign o_ram_we = r_ram_we;
+	assign o_ram_addr = {r_gpr[2], r_gpr[1]};
 
 	// instruction decoder
 	always @ (posedge i_clk or i_rst)
@@ -80,12 +87,14 @@ module cpu
 		begin
 			o_ram_en <= 1'b0;
 			o_rom_en <= 1'b0;
+			r_ram_we <= 1'b0;
 			r_pc <= 0;
 		end
 		else
 		begin
 			o_ram_en <= 1'b1;
 			o_rom_en <= 1'b1;
+			r_ram_we <= 1'b0; // read by default
 			r_pc <= r_pc+1;
 			casex(w_instruction)
 				9'bxxxxxxxx_1: // LD
@@ -152,9 +161,15 @@ module cpu
 				end
 				9'b0100_1100_0: // LDR
 				begin
+					// o_ram_re always set to 1 by default
+					// (not r_ram_we)
+					r_gpr[0] <= i_ram_data[7:0]; // ignore the 9th bit
 				end
 				9'b0101_0100_0: // STR
 				begin
+					r_ram_we <= 1'b1; // enable write to ram
+					// (r_gpr[0] always connected to
+					// o_ram_data
 				end
 				9'b0101_1100_0: // NOP
 				begin
