@@ -17,13 +17,17 @@ test: a.out
 mydump.vcd: a.out
 	./a.out
 
-a.out:
+a.out: rom.mem
 	$(CC) $(ARGS) top_wrapper_tb.v
 
+rom.mem:
+	python asm.py -Wall rom.asm -o rom.mem
+
 clean:
-	rm a.out mydump.vcd
-	rm cpu.blif
-	rm top_wrapper.blif
+	rm -f a.out mydump.vcd
+	rm -f rom.mem
+	rm -f cpu.blif
+	rm -f top_wrapper.blif
 
 synthesis:
 	yosys -p "synth_ice40 -blif cpu.blif" cpu.v
