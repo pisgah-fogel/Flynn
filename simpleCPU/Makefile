@@ -3,7 +3,8 @@ default_target: all
 
 .PHONY : all
 
-TEST = prog/load_test.asm
+#TEST = prog/load_test.asm
+TEST = prog/add_test.asm
 SHELL = /bin/bash
 CMAKE_COMMAND = /usr/bin/cmake
 ARGS = -Wall -Winfloop
