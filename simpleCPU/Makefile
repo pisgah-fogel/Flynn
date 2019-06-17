@@ -3,6 +3,7 @@ default_target: all
 
 .PHONY : all
 
+TEST = prog/load_test.asm
 SHELL = /bin/bash
 CMAKE_COMMAND = /usr/bin/cmake
 ARGS = -Wall -Winfloop
@@ -21,7 +22,7 @@ a.out: rom.mem
 	$(CC) $(ARGS) top_wrapper_tb.v
 
 rom.mem:
-	python asm.py -Wall rom.asm -o rom.mem
+	python asm.py -Wall $(TEST) -o rom.mem
 
 clean:
 	rm -f a.out mydump.vcd
