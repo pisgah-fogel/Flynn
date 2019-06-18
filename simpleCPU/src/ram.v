@@ -30,7 +30,7 @@ begin
 end
 
 initial begin
-	$display("Loading rom.");
+	$display("Loading ram.");
 	$readmemb("ram.mem", Mem);
 end
 
