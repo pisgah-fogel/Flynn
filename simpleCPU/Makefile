@@ -45,6 +45,7 @@ clean:
 	cd src; make clean; cd ../
 	rm -f cpu.blif
 	rm -f rom.mem
+	rm -f log.txt
 	rm -f ram.mem
 	rm -f top_wrapper.blif
 
