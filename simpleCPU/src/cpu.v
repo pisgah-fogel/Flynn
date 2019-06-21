@@ -28,7 +28,6 @@ module cpu
 	input i_clk,
 	input i_rst,
 
-	output reg o_rom_en = 1'b0,
 	output wire [g_ROM_ADDR-1:0] o_rom_addr,
 	input [g_ROM_WIDTH-1:0] i_rom_data,
 
@@ -94,14 +93,12 @@ module cpu
 			r_gpr[6] <= 8'h00;
 			r_gpr[7] <= 8'h00;
 			o_ram_en <= 1'b0;
-			o_rom_en <= 1'b0;
 			r_ram_we <= 1'b0;
 			r_pc <= 0;
 		end
 		else // clock positive edge
 		begin
 			o_ram_en <= 1'b1;
-			o_rom_en <= 1'b1;
 			r_ram_we <= 1'b0; // read by default
 			r_pc <= r_pc+1;
 			casex(w_instruction)

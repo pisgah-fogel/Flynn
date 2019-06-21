@@ -39,6 +39,7 @@ module top_wrapper
 		.o_rst_1(w_rst_1),
 		.o_rst_2(w_rst_2)
 		);
+	assign w_rom_en = ~w_rst_1; // enable ROM before CPU
 
 	cpu #(
 		.g_ROM_WIDTH(9),
@@ -50,7 +51,6 @@ module top_wrapper
 		(
 		.i_clk(i_clk),
 		.i_rst(w_rst_2),
-		.o_rom_en(w_rom_en),
 		.o_rom_addr(w_rom_addr),
 		.i_rom_data(w_rom_data),
 		.o_ram_en(w_ram_en),
