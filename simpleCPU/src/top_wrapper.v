@@ -1,6 +1,7 @@
 `include "cpu.v"
 `include "ram.v"
 `include "rom.v"
+`include "reset_sync.v"
 
 `timescale 1ns/10ps
 
@@ -24,9 +25,20 @@ module top_wrapper
 	wire [8:0] w_ram_data_o;
 	wire [8:0] w_ram_data_i;
 
+	wire w_rst_1;
+	wire w_rst_2;
+
 	reg [7:0] r_led = 8'b10011001;
 
 	assign o_led = r_led;
+
+	reset_sync RESET_INST
+		(
+		.i_clk(i_clk),
+		.i_rst(i_btn[0]),
+		.o_rst_1(w_rst_1),
+		.o_rst_2(w_rst_2)
+		);
 
 	cpu #(
 		.g_ROM_WIDTH(9),
@@ -37,7 +49,7 @@ module top_wrapper
 		CPU_INST
 		(
 		.i_clk(i_clk),
-		.i_rst(i_btn[0]),
+		.i_rst(w_rst_2),
 		.o_rom_en(w_rom_en),
 		.o_rom_addr(w_rom_addr),
 		.i_rom_data(w_rom_data),
