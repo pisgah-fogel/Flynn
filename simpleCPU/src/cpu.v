@@ -81,9 +81,9 @@ module cpu
 	assign o_ram_addr = {r_gpr[2], r_gpr[1]};
 
 	// instruction decoder
-	always @ (posedge i_clk or i_rst)
+	always @ (posedge i_clk or posedge i_rst)
 	begin
-		if (i_rst == 1'b1)
+		if (i_rst == 1'b1) // asynchronous reset positive edge
 		begin
 			r_gpr[0] <= 8'h00;
 			r_gpr[1] <= 8'h00;
@@ -98,7 +98,7 @@ module cpu
 			r_ram_we <= 1'b0;
 			r_pc <= 0;
 		end
-		else
+		else // clock positive edge
 		begin
 			o_ram_en <= 1'b1;
 			o_rom_en <= 1'b1;
