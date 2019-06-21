@@ -28,11 +28,11 @@ module cpu
 	input i_clk,
 	input i_rst,
 
-	output reg o_rom_en,
+	output reg o_rom_en = 1'b0,
 	output wire [g_ROM_ADDR-1:0] o_rom_addr,
 	input [g_ROM_WIDTH-1:0] i_rom_data,
 
-	output reg o_ram_en,
+	output reg o_ram_en = 1'b0,
 	output wire o_ram_we,
 	output wire o_ram_re,
 	output wire [g_RAM_ADDR-1:0] o_ram_addr,
@@ -85,6 +85,14 @@ module cpu
 	begin
 		if (i_rst == 1'b1)
 		begin
+			r_gpr[0] <= 8'h00;
+			r_gpr[1] <= 8'h00;
+			r_gpr[2] <= 8'h00;
+			r_gpr[3] <= 8'h00;
+			r_gpr[4] <= 8'h00;
+			r_gpr[5] <= 8'h00;
+			r_gpr[6] <= 8'h00;
+			r_gpr[7] <= 8'h00;
 			o_ram_en <= 1'b0;
 			o_rom_en <= 1'b0;
 			r_ram_we <= 1'b0;
