@@ -9,7 +9,7 @@
 
 default_target: all
 
-.PHONY : all programs clean synthesis test
+.PHONY : all programs clean synthesis test plot
 
 #TEST = load_test.mem
 TEST = add_test.mem
@@ -19,8 +19,10 @@ ARGS = -Wall -Winfloop
 CC = iverilog
 OPT = 
 
-all: mydump.vcd
+plot: all
 	gtkwave mydump.vcd
+
+all: mydump.vcd
 
 test: a.out
 
