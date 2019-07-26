@@ -1,0 +1,13 @@
+r0,r1,r2,r3,r4,r5,r6,r7,FE,FG,FL,C,PC
+07,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx
+xx,07,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx
+08,07,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx
+0f,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx
+80,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx
+xx,80,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx
+80,80,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx
+00,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,01,xx
+01,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx
+xx,01,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx
+03,01,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx
+04,xx,xx,xx,xx,xx,xx,xx,xx,xx,xx,00,xx

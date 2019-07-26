@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/bin/python2
 
 #
 # This script is called by utils/launch_test.sh
@@ -21,74 +21,81 @@ import sys
 non_reset_pc = "ffff"
 non_reset_pc_int = 0xffff
 
-def check_step(dic_step):
-    global non_reset_pc
-    global non_reset_pc_int
-    if non_reset_pc_int == 0xffff: # we are still in reset or non on stable state
-        if dic_step["r0"] != "00" and dic_step["r0"] != "zz":
-            non_reset_pc = dic_step["PC"]
-            non_reset_pc_int = int(non_reset_pc, 16)
-            print("Found non reset: %s" % str(non_reset_pc))
-        else:
-            return True
-    if non_reset_pc_int != 0xffff:
-        offset = int(dic_step["PC"], 16) - non_reset_pc_int
+def load_csv(filename):
+    """
+    Load a csv file containning expected result
 
-        if offset == 0:
-            if dic_step["r0"] == "07":
-                return True
-            else:
+    it contains:
+    r0, ..., r7, FE, FG, FL, C
+
+    values are either 1 byte hexadecimals or xx for
+    don't care vales
+    """
+    output_list = []
+    with open(filename) as resfile:
+        first_line = resfile.readline().strip()
+        keys = first_line.split(",")
+        line_count = 0
+        for line in resfile:
+            line_count += 1
+            splitted = line.strip().split(",")
+            if splitted==['']:
+                continue
+            elif len(splitted) != len(keys):
+                print("Error in CSV file %s: %s" % (filename, splitted))
+                print("splitted is %d, keys are %d" % (len(splitted),len(keys)))
+                continue
+            line_dic = {}
+            for i in range(len(splitted)):
+                line_dic[keys[i]] = splitted[i];
+            output_list.append(line_dic)
+
+    return output_list[:]
+
+def check_line(result_dic, pattern_dic, verbose=False):
+    for key in pattern_dic:
+        if pattern_dic[key] == "xx":
+            continue
+        elif pattern_dic[key][0] == 'z' or result_dic[key][0] == 'z':
+            if pattern_dic[key] != result_dic[key]:
                 return False
-        elif offset == 1:
-            if dic_step["r1"] == "07":
-                return True
             else:
-                return False
-        elif offset == 2:
-            if dic_step["r0"] == "08":
-                return True
-            else:
-                return False
-        elif offset == 3:
-            if dic_step["r0"] == "0f":
-                print("0x07 + 0x08 passed")
-                return True
-            else:
-                return False
-        else:
-            print("Offset %d:" % (offset))
-            print(dic_step)
+                continue
+        elif key in result_dic and int(result_dic[key], 16) != int(pattern_dic[key], 16):
+            if verbose:
+                print("%s Error: %s does not match %s" % (key, pattern_dic[key],result_dic[key]))
             return False
-    
+    return True
+
+def check_all(array_all, expected):
+    if len(array_all) < len(expected):
+        print("Error: Output is too short to match expected results")
+        return False
+    item_i = 0
+    while item_i < len(array_all):
+        if check_line(array_all[item_i], expected[0]):
+            break
+        item_i += 1
+    print("Detected offset: %d / %d" % (item_i, len(array_all)))
+    if len(array_all)-item_i < len(expected):
+        print("Error: Output offset to big...")
+        return False
+    for index in range(len(expected)):
+        if not check_line(array_all[item_i+index], expected[index]):
+            print("Error at index %d: PC=%s" % (index, array_all[item_i+index]["PC"]))
+            return False
+    return True
 
 if len(sys.argv) != 3:
     print("Error: Expect 3 arguments")
     print("Look at utils/launch_tests.sh for more information")
     exit(1) # Error
 
-match_asm = False
+expected = load_csv("tests/add_test.csv")
+array_all = load_csv(sys.argv[2])
 
-with open(sys.argv[2]) as logfile:
-    first_line = logfile.readline().strip()
-    keys = first_line.split(",")
-    line_count=0
-    for line in logfile:
-        line_count += 1
-        splitted = line.strip().split(',')
-        if len(splitted) != len(keys):
-            print("Error in log.txt on line %d" % line_count)
-            print("len(splitted) = %d" % len(splitted))
-            print("len(keys) = %d" % len(keys))
-            print("Splitted = %s" % splitted)
-            exit(1) # Format error in log.txt
-
-        dic_line = {}
-        for i in range(len(splitted)):
-            dic_line[keys[i]] = splitted[i]
-
-        if not check_step(dic_line):
-            exit(1) # Do not match expected values
-
+if not check_all(array_all, expected):
+    exit(1) # Do not match expected values
+else:
     exit(0) # Success
 
-exit(1) # Reach only if there was an IO error
