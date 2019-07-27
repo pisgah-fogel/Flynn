@@ -46,9 +46,9 @@ clean:
 	cd programs; ./compile.sh clean; cd ../
 	cd src; make clean; cd ../
 	rm -f cpu.blif
-	rm -f rom.mem
 	rm -f log.txt
-	rm -f ram.mem
+	rm -f *.mem
+	rm -f *.log
 	rm -f top_wrapper.blif
 
 synthesis:

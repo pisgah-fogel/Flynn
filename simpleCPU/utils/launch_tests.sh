@@ -77,16 +77,19 @@ do
 
 	${SIMU_ENGINE} ${EXE_PATH} # run simulation
 	
+	new_log_path="${SCRIPT_PATH}/../$(basename "$program" ".${PROG_EXT}").log"
 	if [ ! -r ${LOG_PATH} ]
 	then
 		echo "Simulation Failed: No log output"
 		exit
+	else
+		mv "${LOG_PATH}" "${new_log_path}"
 	fi
 
 	if [ -r "$testpath" ] # test if python script exist
 	then
 		echo "Test script: ${testname}"
-		${TEST_ENGINE} ${testpath} ${program} ${LOG_PATH}
+		${TEST_ENGINE} ${testpath} ${program} ${new_log_path}
 		status=$?
 		if [ ${status} -eq 0 ]
 		then
