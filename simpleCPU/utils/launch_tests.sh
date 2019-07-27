@@ -40,8 +40,16 @@ ROM_PATH="${SCRIPT_PATH}/${ROM_REPATH}"
 
 if [ ! -f ${EXE_PATH} ]
 then
-	echo "Error: Cannot find $(basename "${EXE_PATH}")"
-	exit
+	if [ -r "Makefile" ]
+	then
+		echo "Build simulation binary and mems"
+		make a.out
+		make ram.mem
+		make rom.mem
+	else
+		echo "Error: Cannot find $(basename "${EXE_PATH}")"
+		exit
+	fi
 fi
 
 count_missing_tests=0
