@@ -50,6 +50,7 @@ clean:
 	rm -f *.mem
 	rm -f *.log
 	rm -f top_wrapper.blif
+	rm -r tests/__pycache__/
 
 synthesis:
 	yosys -p "synth_ice40 -blif cpu.blif" src/cpu.v
