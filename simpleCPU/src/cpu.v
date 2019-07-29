@@ -158,7 +158,7 @@ module cpu
 				end
 				9'b0011_1100_0: // NOT
 				begin
-					r_gpr[0] <= ! r_gpr[0];
+					r_gpr[0] <= ~r_gpr[0];
 				end
 				9'b0100_0100_0: // XOR
 				begin
