@@ -1,0 +1,16 @@
+NOP
+LD 00000111 ; A
+MOV r1 r0
+LD 00001000 ; B
+AND ; r0 = r1 and r0 = 0x00
+LD 11111111 ; A
+MOV r1 r0
+LD 11111111 ; B
+AND ; r0 = r1 and r0 = 0xff
+LD 10101010 ; A
+MOV r1 r0
+LD 10011100 ; B
+AND ; r0 = r1 and r0 = 0x88
+NOP
+NOP
+NOP
