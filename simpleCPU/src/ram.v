@@ -26,7 +26,7 @@ begin
 	if (EN && RE)
 		DO <= Mem[addr];
 	else
-		DO <= {WordSize{1'bz}};
+		DO <= {WordSize{1'bx}};
 end
 
 initial begin
@@ -39,7 +39,7 @@ always @(EN or WE)
 		Mem[addr] = DI;
 
 always @(WE or RE)
-	if (!WE && !RE)
+	if (WE && RE)
 		$display("Operational error in RamChip: RE and WE both active");
 
 endmodule
