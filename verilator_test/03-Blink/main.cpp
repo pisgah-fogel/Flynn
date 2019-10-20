@@ -42,7 +42,7 @@ int main (int argc, char **argv)
 	tb->trace(tfp, 99);
 	tfp->open("blinktrace.vcd");
 
-	for (int k=0; k<DURATION; k++) {
+	while (ticks<DURATION) {
 
 		tick(tb, tfp);
 #if ACTIVATE_LOGGING
@@ -56,8 +56,8 @@ int main (int argc, char **argv)
 		if (last_led != tb->o_led) {
 			last_led = tb->o_led;
 			printf("%10d: ", ticks);
-			printf("(%.2fms)", 1000*(ticks-last_log)/(float)CLK_PER_SEC);
-			printf("k = %7d, ", k);
+			printf("(%.2fms) ", 1000*(ticks-last_log)/(float)CLK_PER_SEC);
+			printf("counter = %7d, ", tb->blink__DOT__r_counter);
 			printf("led = %d\n", tb->o_led);
 			last_log = ticks;
 		}
