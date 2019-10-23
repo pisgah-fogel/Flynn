@@ -103,4 +103,5 @@ int main (int argc, char **argv)
 	tfp->open("ramtrace.vcd");
 
 	rand_test_disable();
+	return 0;
 }
