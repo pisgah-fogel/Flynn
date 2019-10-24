@@ -13,7 +13,7 @@ module reset_sync
 	);
 
 	// can be higher to debounce a button
-	reg [1:0] r_rst = 2'b11;
+	reg [1:0] r_rst = 2'b00;
 	
 	always @ (posedge i_clk)
 	begin
@@ -23,7 +23,7 @@ module reset_sync
 
 	always @ (posedge i_clk)
 	begin
-		o_rst_1 <= r_rst[0] | r_rst[1] | i_rst;
+		o_rst_1 <= r_rst[0] & r_rst[1] & i_rst;
 	end
 
 	always @ (posedge i_clk)
