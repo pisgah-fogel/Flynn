@@ -38,7 +38,8 @@ void log()
 void must_be(unsigned int reset_1, unsigned int reset_2)
 {
     tick();
-    if (tb->o_rst_1 == reset_1 || tb->o_rst_2 == reset_2) {
+    printf("Input: %d | UUT: %d %d | Model: %d %d\n", tb->i_rst, tb->o_rst_1, tb->o_rst_2, reset_1, reset_2);
+    if (tb->o_rst_1 != reset_1 || tb->o_rst_2 != reset_2) {
         errors ++;
         printf("Error, resets should be %d and %d\n", reset_1, reset_2);
         log();
@@ -47,24 +48,28 @@ void must_be(unsigned int reset_1, unsigned int reset_2)
 
 void model(unsigned int* rst_1, unsigned int* rst_2, unsigned int rst)
 {
-	static unsigned int array[] = [0, 0];
-	*rst_2 = *rst_1;
-	if (*rst_1 == 0) {
-		*rst_1 = array[0] & array[1] & rst;
+	static unsigned int array[] = {0, 0};
+	static unsigned int old_rst_1 = 0;
+	*rst_2 = old_rst_1;
+	if (old_rst_1 == 0) { // go up only if up for 3 clocks
+		old_rst_1 = array[0] & array[1] & rst;
 	}
-	else {
-		*rst_1 = array[0] | array[1] | rst;
+	else { // go down only if down for 3 clocks
+		old_rst_1 = !array[0] & !array[1] & !rst;
+		old_rst_1 = !old_rst_1;
 	}
 	array[0] = rst;
 	array[1] = array[0];
+	*rst_1 = old_rst_1;
 }
 
 void simu_one_cycle(unsigned int rst)
 {
 
-	unsigned int expected_1, expected_2;
+	unsigned int expected_1;
+	unsigned int expected_2;
 	tb->i_rst = rst;
-	model(*expected_1, *expected_2, rst);
+	model(&expected_1, &expected_2, rst);
 	tick();
 	must_be(expected_1, expected_2);
 }
@@ -85,7 +90,96 @@ int main (int argc, char **argv)
 	tb->trace(tfp, 99);
 	tfp->open("reset_synctrace.vcd");
 
+	printf("Go up then down");
 	tb->i_clk = 0;
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+
+	printf("Alternate: Every cycle");
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+
+	printf("Altrnate: Every 2 cycle");
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+
+	printf("Altrnate: Every 3 cycle");
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+
+	printf("Altrnate: Every 4 cycle");
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(0);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(1);
+	simu_one_cycle(0);
 	simu_one_cycle(0);
 	simu_one_cycle(0);
 	simu_one_cycle(0);
