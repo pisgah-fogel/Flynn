@@ -8,7 +8,7 @@ WIDTH=12
 all: ${MAIN_VERILOG_MODULE}
 
 ${MAIN_VERILOG_MODULE}: obj_dir/V${MAIN_VERILOG_MODULE}__ALL.a ram.mem
-	g++ -I ${VERILATOR_PATH}/include/ -I obj_dir/ ${VERILATOR_PATH}/include/verilated.cpp ${VERILATOR_PATH}/include/verilated_vcd_c.cpp main.cpp obj_dir/V${MAIN_VERILOG_MODULE}__ALL.a -o ${MAIN_VERILOG_MODULE}
+	g++ -g -I ${VERILATOR_PATH}/include/ -I obj_dir/ ${VERILATOR_PATH}/include/verilated.cpp ${VERILATOR_PATH}/include/verilated_vcd_c.cpp main.cpp obj_dir/V${MAIN_VERILOG_MODULE}__ALL.a -o ${MAIN_VERILOG_MODULE}
 
 obj_dir/V${MAIN_VERILOG_MODULE}__ALL.a:
 	${VERILATOR_EXE}  -Wall --trace -cc  ${VERILOG_PATH}/${MAIN_VERILOG_MODULE}.v && cd obj_dir/ && make -f V${MAIN_VERILOG_MODULE}.mk
