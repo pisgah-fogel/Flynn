@@ -57,7 +57,7 @@ void rand_test_disable() {
 		tick();
 		if (tb->DO != 0) {
 			fails ++;
-			printf("Error: The design is not enabled, it should not drive anything");
+			printf("Error: The design is not enabled, it should not drive anything\n");
 			log();
 		}
 		tb->WE = rand() & 1;
@@ -67,7 +67,7 @@ void rand_test_disable() {
 			tb->RE = !tb->WE;
 		}
 		if (tb->WE == 1 && tb->RE == 1) {
-			printf("VError: In the verification program, WE and RE should never be up in the same time");
+			printf("VError: In the verification program, WE and RE should never be up in the same time\n");
 			log();
 		}
 		tb->DI = rand();
@@ -75,6 +75,41 @@ void rand_test_disable() {
 	}
 
 	printf("Random test with disabled ram - ");
+	if (fails == 0) {
+		printf("Passed\n");
+	} else {
+		printf("%d Error(s)\n", fails);
+	}
+}
+
+/*
+ * Write then read random values
+ */
+void rand_test_write_read() {
+	fails = 0;
+	tb->EN = 1;
+	tb->WE = 0;
+	tb->RE = 0;
+	tb->DI = 0;
+	tb->addr = 0;
+	for (int i = 0; i<DURATION; i++) {
+		tick();
+		tb->WE = 1;
+		tb->RE = 0;
+		tb->DI = rand() & 0x1ff; // 9bits: from 0x0 to 0b01ff
+		tb->addr = rand() & 0x7ff; // 11bits: from 0x0 to 0b07ff
+		tick();
+		tb->WE = 0;
+		tb->RE = 1;
+		tick();
+		if (tb->DO != tb->DI) {
+			fails ++;
+			printf("Error: Read a wrong value from the memory\n");
+			log();
+		}
+	}
+
+	printf("Random write read test - ");
 	if (fails == 0) {
 		printf("Passed\n");
 	} else {
@@ -103,5 +138,6 @@ int main (int argc, char **argv)
 	tfp->open("ramtrace.vcd");
 
 	rand_test_disable();
+	rand_test_write_read();
 	return 0;
 }
