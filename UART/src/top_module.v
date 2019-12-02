@@ -1,4 +1,4 @@
-`include "UART-nandland.v"
+`include "../src/UART-nandland.v"
 
 `timescale 1ns/10ps
 

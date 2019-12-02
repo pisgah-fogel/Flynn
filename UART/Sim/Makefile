@@ -18,7 +18,7 @@ mydump.vcd: a.out
 	./a.out
 
 a.out:
-	$(CC) $(ARGS) UART_tb.v
+	$(CC) $(ARGS) ../src/UART_tb.v
 
 clean:
 	rm a.out mydump.vcd
@@ -26,12 +26,10 @@ clean:
 	rm top_module.blif
 
 synthesis:
-	yosys -p "synth_ice40 -blif uart.blif" UART-nandland.v
+	yosys -p "synth_ice40 -blif uart.blif" ../src/UART-nandland.v
 
 top:
-	$(CC) $(ARGS) top_module_tb.v
+	$(CC) $(ARGS) ../src/top_module_tb.v
 	./a.out
 	gtkwave mydump.vcd
-
-	
 

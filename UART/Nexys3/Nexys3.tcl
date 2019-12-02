@@ -231,8 +231,8 @@ proc add_source_files {} {
 
    puts "$myScript: Adding sources to project..."
 
-   xfile add "../Nexys3.ucf"
-   xfile add "../top_module.v"
+   xfile add "../../src/Nexys3.ucf"
+   xfile add "../../src/top_module.v"
 
    # Set the Top Module as well...
    project set top "top_module"
