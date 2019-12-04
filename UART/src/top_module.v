@@ -1,4 +1,5 @@
-`include "../src/UART-nandland.v"
+`include "../src/UART_rx.v"
+`include "../src/UART_tx.v"
 
 `timescale 1ns/10ps
 

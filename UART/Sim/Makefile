@@ -26,7 +26,7 @@ clean:
 	rm top_module.blif
 
 synthesis:
-	yosys -p "synth_ice40 -blif uart.blif" ../src/UART-nandland.v
+	yosys -p "synth_ice40 -blif uart.blif" ../src/top_module.v
 
 top:
 	$(CC) $(ARGS) ../src/top_module_tb.v
