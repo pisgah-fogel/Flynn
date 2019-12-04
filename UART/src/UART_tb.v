@@ -1,5 +1,5 @@
-`include "../src/UART_rx.v"
-`include "../src/UART_tx.v"
+`include "../src/uart_rx.v"
+`include "../src/uart_tx.v"
 
 `timescale 1ns/10ps
 
@@ -122,7 +122,7 @@ module uart_tb ();
   endtask // UART_WRITE_BYTE
    
    
-  uart_rx #(.CLKS_PER_BIT(c_CLKS_PER_BIT)) UART_RX_INST
+  uart_rx #(.CLKS_PER_BIT(c_CLKS_PER_BIT)) uart_rx_INST
     (.i_Clock(r_Clock),
      //.i_Rx_Serial(r_Rx_Serial),
      .i_Rx_Serial(w_Tx_Serial),
@@ -130,7 +130,7 @@ module uart_tb ();
      .o_Rx_Byte(w_Rx_Byte)
      );
    
-  uart_tx #(.CLKS_PER_BIT(c_CLKS_PER_BIT)) UART_TX_INST
+  uart_tx #(.CLKS_PER_BIT(c_CLKS_PER_BIT)) uart_tx_INST
     (.i_Clock(r_Clock),
      .i_Tx_DV(r_Tx_DV),
      .i_Tx_Byte(r_Tx_Byte),
@@ -148,8 +148,8 @@ module uart_tb ();
   initial
     begin
 	$dumpfile("mydump.vcd");
-	$dumpvars(0, UART_RX_INST);
-	$dumpvars(0, UART_TX_INST);
+	$dumpvars(0, uart_rx_INST);
+	$dumpvars(0, uart_tx_INST);
 	$display("Start simulation");
       // Tell UART to send a command (exercise Tx)
       @(posedge r_Clock);

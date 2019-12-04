@@ -18,7 +18,7 @@ mydump.vcd: a.out
 	./a.out
 
 a.out:
-	$(CC) $(ARGS) ../src/UART_tb.v
+	$(CC) $(ARGS) ../src/uart_tb.v
 
 clean:
 	rm a.out mydump.vcd

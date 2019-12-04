@@ -1,5 +1,5 @@
-`include "../src/UART_rx.v"
-`include "../src/UART_tx.v"
+`include "../src/uart_rx.v"
+`include "../src/uart_tx.v"
 
 `timescale 1ns/10ps
 
@@ -44,14 +44,14 @@ module top_module
 
 	reg [25:0] r_count = 0;
 
-  uart_rx #(.CLKS_PER_BIT(CLKS_PER_BIT)) UART_RX_INST
+  uart_rx #(.CLKS_PER_BIT(CLKS_PER_BIT)) uart_rx_INST
     (.i_Clock(clk),
      .i_Rx_Serial(w_Rx_Serial),
      .o_Rx_DV(w_Rx_DV),
      .o_Rx_Byte(w_Rx_Byte)
      );
    
-  uart_tx #(.CLKS_PER_BIT(CLKS_PER_BIT)) UART_TX_INST
+  uart_tx #(.CLKS_PER_BIT(CLKS_PER_BIT)) uart_tx_INST
     (.i_Clock(clk),
      .i_Tx_DV(r_Tx_DV),
      .i_Tx_Byte(w_Tx_Byte),
