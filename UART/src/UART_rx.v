@@ -20,7 +20,7 @@ module uart_rx
   reg           r_Rx_Data   = 1'b1;
    
   reg [10:0]     r_Clock_Count = 0;
-  reg [3:0]     r_Bit_Index   = 0; //8 bits total
+  reg [2:0]     r_Bit_Index   = 0; //8 bits total
   reg [7:0]     r_Rx_Byte     = 0;
   reg           r_Rx_DV       = 0;
   reg [2:0]     r_SM_Main     = 0;
