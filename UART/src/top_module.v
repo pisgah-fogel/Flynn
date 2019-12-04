@@ -39,7 +39,7 @@ module top_module
 	parameter s_B = 2'b10;
 	parameter s_C = 2'b11;
 
-	reg [2:0] r_state = s_IDLE;
+	reg [1:0] r_state = s_IDLE;
 	reg [3:0] int_led = 4'b0000;
 
 	reg [25:0] r_count = 0;
