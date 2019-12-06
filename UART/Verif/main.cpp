@@ -19,21 +19,43 @@ void wait_cycle(unsigned int nb) {
 		if (tfp)
 			tfp->dump(ticks);
 		ticks ++;
-		tb->i_clk = 0;
+		tb->clk = 0;
 		tb->eval();
 		if (tfp) {
 			tfp->dump(ticks);
 			tfp->flush();
 		}
 		ticks ++;
-		tb->i_clk = 1;
+		tb->clk = 1;
 		tb->eval(); // return on rising edge
 	}
 }
 
+void wait_ms(unsigned int nb) {
+	wait_cycle(nb*TICKS_PER_SEC/1000);
+}
+
 int main (int argc, char **argv)
 {
-	printf("Work in progress\n");
-	printf("Nothing to do\n");
+	Verilated::commandArgs(argc, argv);
+	tb = new Vtop_module;
+
+	// Generated a trace
+	Verilated::traceEverOn(true);
+	tfp = new VerilatedVcdC;
+	tb->trace(tfp, 99);
+	tfp->open("top_moduletrace.vcd");
+
+	printf("Initialize outputs\n");
+	tb->clk = 0;
+	tb->btn = 0b00001111 & 0;
+	tb->Rx = 0;
+	tb->sw = 0b01111111 & 0;
+
+	printf("Wait 1 ms\n");
+	wait_ms(1);
+
+	printf("Ticks %ld\n", ticks);
+	printf("Errors %ld\n", errors);
 	return 0;
 }
