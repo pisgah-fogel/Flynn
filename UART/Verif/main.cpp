@@ -40,6 +40,13 @@ void uart_read() {
 			if (uart_read_bit == 1 + 8 + 1) { // One start bit, 8 data, 1 stop
 				printf("UART: End of reception (%ld), data=0x%x\n", ticks, uart_read_data);
 				uart_read_is_recv = false;
+				if (uart_read_data&0xff != tb->sw&0xff) {
+					printf("UART: Error, Switches are 0x%x, UART should receive the same\n", tb->sw&0xff);
+					errors++;
+				}
+				else {
+					printf("UART: Switches OK 0x%x\n", tb->sw&0xff);
+				}
 			}
 		} else if (uart_read_bit == 0 && uart_read_count == half_period_cycles) {
 			if (tb->Tx != 0) {
