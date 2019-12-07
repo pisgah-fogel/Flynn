@@ -231,7 +231,7 @@ proc add_source_files {} {
 
    puts "$myScript: Adding sources to project..."
 
-   xfile add "../../src/Nexys3.ucf"
+   xfile add "../Nexys3.ucf"
    xfile add "../../src/top_module.v"
 
    # Set the Top Module as well...
@@ -443,7 +443,7 @@ proc set_process_props {} {
    project set "Use Synthesis Constraints File" "true" -process "Synthesize - XST"
    project set "Verilog Include Directories" "" -process "Synthesize - XST"
    project set "Verilog Macros" "" -process "Synthesize - XST"
-   project set "Work Directory" "/home/djeck/projects/fpga/Flynn/UART/Nexys3/project_1/xst" -process "Synthesize - XST"
+   project set "Work Directory" "../project_1/xst" -process "Synthesize - XST"
    project set "Write Timing Constraints" "false" -process "Synthesize - XST"
    project set "Other XST Command Line Options" "" -process "Synthesize - XST"
    project set "Timing Mode" "Performance Evaluation" -process "Map"
