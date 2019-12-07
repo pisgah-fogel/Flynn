@@ -15,49 +15,53 @@ static VerilatedVcdC* tfp;
 
 static bool uart_read_is_recv = false;
 static unsigned long int uart_read_count= 0;
-static unsigned long int uart_read_half_bit= 0;
+static unsigned long int uart_read_bit= 0;
 static unsigned int uart_read_data= 0;
+
 void uart_read() {
-	const unsigned int clock_freq = 100000000; // 100MHz
-	const unsigned int baud_rate = 115200;
-	const unsigned int half_bit_period_cycles = clock_freq/baud_rate;
+	const unsigned long int clock_freq = 100000000; // 100MHz
+	const unsigned long int baud_rate = 115200;
+	const unsigned long int bit_period_cycles = 2*clock_freq/baud_rate; // 868
+	const unsigned long int half_period_cycles = bit_period_cycles/2; // 434
 
 	if (!uart_read_is_recv) {
-		if (tb->Tx == 0) {
+		if (tb->Tx == 0 && ticks > 1) {
 			uart_read_is_recv = true;
-			uart_read_count = 0;
+			uart_read_count = 1;
 			uart_read_data = 0;
-			uart_read_half_bit = 0;
-			printf("Tx = %d\n", tb->Tx);
+			uart_read_bit = 0;
 			printf("UART: Start bit received (tick %ld)\n", ticks);
 		}
 	} else {
 		uart_read_count++;
-		if (uart_read_count == half_bit_period_cycles) {
-			uart_read_count= 0;
-			printf("Tx = %d\n", tb->Tx);
-			printf("UART: Half bit n %ld (%ld)\n", uart_read_half_bit, ticks);
-			if (uart_read_half_bit == 2*1 + 2*8 + 1*2) {
-				printf("UART: End of reception n (%ld)\n", ticks);
+		if (uart_read_count == bit_period_cycles) {
+			uart_read_count = 0;
+			uart_read_bit++;
+			if (uart_read_bit == 1 + 8 + 1) { // One start bit, 8 data, 1 stop
+				printf("UART: End of reception (%ld), data=0x%x\n", ticks, uart_read_data);
 				uart_read_is_recv = false;
 			}
-			uart_read_half_bit++;
-		} else if (uart_read_half_bit == 0) {
+		} else if (uart_read_bit == 0 && uart_read_count == half_period_cycles) {
 			if (tb->Tx != 0) {
-				printf("Tx = %d\n", tb->Tx);
-				printf("Error tick %ld : Start bit should be 0\n", ticks);
+				printf("UART: Error tick %ld : Start bit should be 0 (Tx: %d)\n", ticks, tb->Tx);
 				errors++;
 				uart_read_is_recv = false;
+			} else {
+				printf("UART: Tick %ld : Start bit OK( Tx: %d)\n", ticks, tb->Tx);
 			}
-		} else if (uart_read_half_bit == 2*1 + 2*8 + 1*2) {
+		} else if (uart_read_bit == 9 && uart_read_count == half_period_cycles) {
 			if (tb->Tx != 1) {
-				printf("Tx = %d\n", tb->Tx);
-				printf("Error tick %ld : End bit should be 1\n", ticks);
+				printf("UART: Error tick %ld : Stop bit should be 1 (Tx: %d)\n", ticks, tb->Tx);
 				errors++;
+			} else {
+				printf("UART: Tick %ld : Stop bit OK( Tx: %d)\n", ticks, tb->Tx);
 			}
+		} else if (uart_read_count == half_period_cycles) {
+			uart_read_data = uart_read_data>>1;
+			uart_read_data += tb->Tx<<7;
+			printf("- %d\n", tb->Tx);
 		}
 	}
-	
 }
 
 void wait_cycle(unsigned int nb) {
@@ -124,12 +128,12 @@ int main (int argc, char **argv)
 	tb->clk = 0;
 	tb->btn = 0b00001111 & 0;
 	tb->Rx = 1;
-	tb->sw = 0b01111111 & 0b00000010;
+	tb->sw = 0xff & 0x46;
 
 	printf("Wait 1 ms\n");
 	wait_ms(1);
 
-	uart_write(0x42);
+	uart_write(0x46);
 
 	printf("Wait 1 ms\n");
 	wait_ms(1);
