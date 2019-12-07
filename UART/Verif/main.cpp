@@ -95,7 +95,7 @@ void uart_write(const unsigned int data) {
 
 	unsigned int buffer = data;
 
-	printf("UART: write %d\n", data);
+	printf("UART: write 0x%x\n", data);
 
 	// Start bit
 	tb->Rx = 0;
@@ -133,7 +133,15 @@ int main (int argc, char **argv)
 	printf("Wait 1 ms\n");
 	wait_ms(1);
 
-	uart_write(0x46);
+	unsigned int data_to_send = 0x46;
+	uart_write(data_to_send);
+
+	if (tb->Led&0x0f != data_to_send&0x0f) {
+		printf("LED[0:3]: Error: Should be 0x%x, not 0x%x\n", data_to_send&0x0f, tb->Led&0x0f);
+		errors++;
+	} else {
+		printf("LED[0:3]: OK 0x%x\n", tb->Led&0x0f);
+	}
 
 	printf("Wait 1 ms\n");
 	wait_ms(1);
