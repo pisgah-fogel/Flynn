@@ -30,6 +30,17 @@ overlay = Overlay('design_1.bit')
 gpio = overlay.ip_dict['axi_gpio_0']
 
 from pynq.lib import AxiGPIO
-leds = AxiGPIO(gpio).channel1
 
+leds = AxiGPIO(gpio).channel1
+leds.setdirection("out")
+leds.setlength(4)
+leds.trimask
+leds.trimask = 0
+leds.write(0x6, 0xf)
+
+btns = AxiGPIO(gpio).channel2
+btns.read()
+
+while True:
+    leds.write(btns.read(), 0xf)
 ```
