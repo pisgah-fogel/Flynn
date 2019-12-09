@@ -662,6 +662,9 @@ if {$make_assignments} {
 	set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_simulation
 	set_global_assignment -name EDA_WRITE_DEVICE_CONTROL_PORTS OFF -section_id eda_simulation
 	set_global_assignment -name EDA_FLATTEN_BUSES OFF -section_id eda_simulation
+	
+	# Source constraints
+	source EP2C5_Mini.qsf
 
 	# Commit assignments
 	export_assignments
