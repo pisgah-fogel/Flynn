@@ -7,7 +7,7 @@ module test_module
 	);
 	
 	input wire [3:0] in;
-	input wire [3:0] out;
+	output wire [3:0] out;
 
 	assign out = in;
 
