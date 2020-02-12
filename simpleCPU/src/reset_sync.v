@@ -15,7 +15,7 @@ module reset_sync
 	// can be higher to debounce a button
 	reg [1:0] r_rst = 2'b00;
 
-	reg w_rst_1 = 1'b0;
+	wire w_rst_1;
 	reg r_rst_1 = 1'b0;
 	
 	always @ (posedge i_clk)
