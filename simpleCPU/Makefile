@@ -42,7 +42,7 @@ programs:
 	cd programs; ./compile.sh all; cd ../
 
 clean:
-	rm -f mydump.vcd
+	rm -f *.vcd
 	cd programs; ./compile.sh clean; cd ../
 	cd src; make clean; cd ../
 	rm -f cpu.blif
@@ -50,7 +50,7 @@ clean:
 	rm -f *.mem
 	rm -f *.log
 	rm -f top_wrapper.blif
-	rm -r tests/__pycache__/
+	rm -rf tests/__pycache__/
 
 synthesis:
 	yosys -p "synth_ice40 -blif cpu.blif" src/cpu.v
