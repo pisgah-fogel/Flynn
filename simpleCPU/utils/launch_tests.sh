@@ -101,6 +101,7 @@ do
 			count_failed_tests=$(($count_failed_tests + 1))
 		fi
 	else
+		echo "------------ Missing testcase ---------------"
 		echo "Warning: No test script named ${testname}"
 		count_missing_tests=$(($count_missing_tests + 1))
 	fi
