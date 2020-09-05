@@ -36,3 +36,9 @@ Instruction shortname |  bits (MSB - LSB) | Operation
         LDR           | 0 1 0 0 1 1 0 0 0 | R0 <- RAM[R2, R1]
         STR           | 0 1 0 1 0 1 0 0 0 | RAM[R2, R1] <- R0
         NOP           | 0 1 0 1 1 1 0 0 0 | No operation
+
+## Requirements
+- iverilog
+- gtkwave
+- python (V3)
+- bash
