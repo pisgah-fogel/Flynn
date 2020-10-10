@@ -1,0 +1,6 @@
+programs/*.mem
+ram.mem
+rom.mem
+*.vcd
+log.txt
+a.out

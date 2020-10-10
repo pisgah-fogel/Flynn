@@ -11,8 +11,9 @@ default_target: all
 
 .PHONY : all programs clean synthesis test plot
 
-#TEST = load_test.mem
-TEST = add_test.mem
+#TEST = str_test.mem
+#TEST = je_test.mem
+TEST = jmp_test.mem
 SHELL = /bin/bash
 CMAKE_COMMAND = /usr/bin/cmake
 ARGS = -Wall -Winfloop
@@ -20,7 +21,7 @@ CC = iverilog
 OPT = 
 
 plot: all
-	gtkwave mydump.vcd
+	gtkwave mydump.vcd &
 
 all: mydump.vcd
 
@@ -33,6 +34,7 @@ a.out:
 	cd src; make all; cd ../
 
 rom.mem: programs
+	rm -f rom.mem
 	ln -s programs/$(TEST)  rom.mem
 
 ram.mem:
@@ -42,7 +44,7 @@ programs:
 	cd programs; ./compile.sh all; cd ../
 
 clean:
-	rm -f mydump.vcd
+	rm -f *.vcd
 	cd programs; ./compile.sh clean; cd ../
 	cd src; make clean; cd ../
 	rm -f cpu.blif
@@ -50,7 +52,7 @@ clean:
 	rm -f *.mem
 	rm -f *.log
 	rm -f top_wrapper.blif
-	rm -r tests/__pycache__/
+	rm -rf tests/__pycache__/
 
 synthesis:
 	yosys -p "synth_ice40 -blif cpu.blif" src/cpu.v

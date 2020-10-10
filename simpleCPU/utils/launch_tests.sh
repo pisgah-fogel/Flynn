@@ -96,10 +96,12 @@ do
 			echo "Test $(basename "$program" ".${PROG_EXT}") returned success(${status}) exit status"
 			count_passed_tests=$(($count_passed_tests + 1))
 		else
+			cp "${SCRIPT_PATH}/../mydump.vcd" "${SCRIPT_PATH}/../$(basename "$program" ".${PROG_EXT}").vcd"
 			echo "Test $(basename "$program" ".${PROG_EXT}") returned error(${status}) exit status"
 			count_failed_tests=$(($count_failed_tests + 1))
 		fi
 	else
+		echo "------------ Missing testcase ---------------"
 		echo "Warning: No test script named ${testname}"
 		count_missing_tests=$(($count_missing_tests + 1))
 	fi
