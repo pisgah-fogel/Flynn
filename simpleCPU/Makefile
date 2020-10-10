@@ -47,6 +47,9 @@ clean:
 	rm -f *.vcd
 	cd programs; ./compile.sh clean; cd ../
 	cd src; make clean; cd ../
+	cd verif/ram/; make clean; cd ../..
+	cd verif/reset_sync/; make clean; cd ../..
+	cd debugger/; make clean; cd ..
 	rm -f cpu.blif
 	rm -f log.txt
 	rm -f *.mem
