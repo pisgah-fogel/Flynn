@@ -4,3 +4,4 @@ rom.mem
 *.vcd
 log.txt
 a.out
+**/obj_dir
