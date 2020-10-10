@@ -4,7 +4,7 @@ module rom (
 	clk,
 	addr,
 	DO, // data out
-	EN, // enable
+	EN // enable
 	);
 
 parameter AddrSize = 11;
@@ -26,7 +26,7 @@ begin
 	if (EN)
 		DO <= Mem[addr];
 	else
-		DO <= {WordSize{1'bz}};
+		DO <= {WordSize{1'b0}};
 end
 
 initial begin
