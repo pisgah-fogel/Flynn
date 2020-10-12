@@ -10,7 +10,7 @@ bool is_bin(const std::string &str) {
     return true;
 }
 
-void reg_to_bin(std::string* output, const std::string &str) {
+void append_register_as_binary(std::string* output, const std::string &str) {
     if (str.length() != 2 || str[0] != 'r') {
         std::cout<<"Compiler Error: Wrong register: "<<str<<" r0, r1... expected"<<std::endl;
         return;
@@ -62,14 +62,14 @@ BOOST_AUTO_TEST_CASE( tc_int_to_binary_string )
   BOOST_TEST_REQUIRE( "11011001" == int_to_binary_string(0b11011001, 8) );
 }
 
-BOOST_AUTO_TEST_CASE( tc_reg_to_bin ) // tc = Testcase
+BOOST_AUTO_TEST_CASE( tc_append_register_as_binary ) // tc = Testcase
 {
     std::string output;
     for (size_t i=0; i<=7; i++) {
         std::string a = "r";
         char c = (char)('0'+i); // '0', '1'...
         a.append(&c); // "r0", "r1", ...
-        reg_to_bin(&output, a);
+        append_register_as_binary(&output, a);
         BOOST_TEST_REQUIRE( output == int_to_binary_string(i, 3) );
         output.clear();
     }
