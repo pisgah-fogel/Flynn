@@ -47,6 +47,108 @@ void append_register_as_binary(std::string* output, const std::string &str) {
         std::cout<<"Compiler Error: Wrong register: "<<str<<" r0, r1... expected."<<std::endl;
 }
 
+void parse_line(std::string *output, const std::string& code)
+{
+    // Step 1: split the line, ignore spare spaces and comments
+    std::vector<std::string> splitted;
+    std::string current_word;
+    for (const char &c: code) {
+        if (c == '#') { // ignore comments
+            if (current_word.size())
+                splitted.push_back(current_word);
+            break;
+        }
+        if (c == ' ') {
+            if (current_word.size()) {
+                splitted.push_back(current_word);
+                current_word.clear();
+            }
+        }
+        else
+        {
+            current_word.push_back(c);
+        }
+    }
+    if (current_word.size()) // No ' ' before EOL
+        splitted.push_back(current_word);
+
+    if (splitted.size() < 1) {
+        return; // ignore empty lines
+    }
+    else if (splitted.size() < 2) {
+        if (splitted[0] == "JE") {
+            output->append("000001000");
+        }
+        else if (splitted[0] == "JG") {
+            output->append("000011000");
+        }
+        else if (splitted[0] == "JL") {
+            output->append("000101000");
+        }
+        else if (splitted[0] == "JMP") {
+            output->append("000111000");
+        }
+        else if (splitted[0] == "ADD") {
+            output->append("001001000");
+        }
+        else if (splitted[0] == "AND") {
+            output->append("001011000");
+        }
+        else if (splitted[0] == "OR") {
+            output->append("001101000");
+        }
+        else if (splitted[0] == "NOT") {
+            output->append("001111000");
+        }
+        else if (splitted[0] == "XOR") {
+            output->append("010001000");
+        }
+        else if (splitted[0] == "LDR") {
+            output->append("010011000");
+        }
+        else if (splitted[0] == "STR") {
+            output->append("010101000");
+        }
+        else if (splitted[0] == "NOP") {
+            output->append("010111000");
+        }
+        else {
+            std::cout<<"Compiler Error: Invalid instruction or wrong number of arguments: \""<<code<<"\""<<std::endl;
+            return;
+        }
+    }
+    else if (splitted.size() < 3) {
+        if (splitted[0] == "LD") {
+            append_address(output, splitted[1]);
+            output->append("1");
+        }
+        else {
+            std::cout<<"Compiler Error: Invalid instruction or wrong number of arguments: \""<<code<<"\""<<std::endl;
+            return;
+        }
+    }
+    else if (splitted.size() < 4) {
+        if (splitted[0] == "MOV") {
+            append_register_as_binary(output, splitted[2]);
+            append_register_as_binary(output, splitted[1]);
+            output->append("100");
+        }
+        else if (splitted[0] == "CMP") {
+            append_register_as_binary(output, splitted[2]);
+            append_register_as_binary(output, splitted[1]);
+            output->append("110");
+        }
+        else {
+            std::cout<<"Compiler Error: Invalid instruction or wrong number of arguments: \""<<code<<"\""<<std::endl;
+            return;
+        }
+    }
+    else {
+        std::cout<<"Compiler Error: Error parsing: \""<<code<<"\""<<std::endl;
+        return;
+    }
+}
+
 #ifdef UNIT_TEST
 #define BOOST_TEST_MODULE example
 #include <boost/test/included/unit_test.hpp>
@@ -120,6 +222,73 @@ BOOST_AUTO_TEST_CASE( tc_append_address )
 
     append_address(&output, "21110101");
     BOOST_TEST_REQUIRE( output == "" );
+    output.clear();
+}
+
+BOOST_AUTO_TEST_CASE( tc_parse_line )
+{
+    std::string output;
+
+    std::cout<<"No compiler's error should be raised there:"<<std::endl;
+
+    parse_line(&output, "LD 10011110");
+    BOOST_TEST_REQUIRE( output == "100111101" );
+    output.clear();
+
+    parse_line(&output, "MOV r0 r2");
+    BOOST_TEST_REQUIRE( output == "010000100" );
+    output.clear();
+
+    parse_line(&output, "CMP r3 r2");
+    BOOST_TEST_REQUIRE( output == "010011110" );
+    output.clear();
+
+    parse_line(&output, "JE");
+    BOOST_TEST_REQUIRE( output == "000001000" );
+    output.clear();
+
+    parse_line(&output, "JG");
+    BOOST_TEST_REQUIRE( output == "000011000" );
+    output.clear();
+
+    parse_line(&output, "JL");
+    BOOST_TEST_REQUIRE( output == "000101000" );
+    output.clear();
+
+    parse_line(&output, "JMP");
+    BOOST_TEST_REQUIRE( output == "000111000" );
+    output.clear();
+
+    parse_line(&output, "ADD");
+    BOOST_TEST_REQUIRE( output == "001001000" );
+    output.clear();
+
+    parse_line(&output, "AND");
+    BOOST_TEST_REQUIRE( output == "001011000" );
+    output.clear();
+
+    parse_line(&output, "OR");
+    BOOST_TEST_REQUIRE( output == "001101000" );
+    output.clear();
+
+    parse_line(&output, "NOT");
+    BOOST_TEST_REQUIRE( output == "001111000" );
+    output.clear();
+
+    parse_line(&output, "XOR");
+    BOOST_TEST_REQUIRE( output == "010001000" );
+    output.clear();
+
+    parse_line(&output, " LDR ");
+    BOOST_TEST_REQUIRE( output == "010011000" );
+    output.clear();
+
+    parse_line(&output, " STR");
+    BOOST_TEST_REQUIRE( output == "010101000" );
+    output.clear();
+
+    parse_line(&output, "NOP # Test");
+    BOOST_TEST_REQUIRE( output == "010111000" );
     output.clear();
 }
 
