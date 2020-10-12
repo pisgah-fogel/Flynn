@@ -5,6 +5,10 @@
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
+#define UNIT_TEST // Uncomment this line to run debugger's unit tests
+
+#include "compiler.hpp"
+
 static VerilatedVcdC* tfp;
 static Vtop_wrapper* tb;
 static unsigned long int ticks = 0;
@@ -25,6 +29,7 @@ void tick() {
 	tb->eval(); // return on rising edge
 }
 
+#ifndef UNIT_TEST
 int main (int argc, char** argv) {
     Verilated::commandArgs(argc, argv);
 	tb = new Vtop_wrapper;
@@ -52,3 +57,4 @@ int main (int argc, char** argv) {
     delete(tb);
     return 0;
 }
+#endif
