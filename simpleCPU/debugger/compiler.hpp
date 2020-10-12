@@ -2,6 +2,14 @@
 
 #include <iostream>
 
+bool is_bin(const std::string &str) {
+    for (const char &c: str) {
+        if (c != '0' && c != '1')
+            return false;
+    }
+    return true;
+}
+
 void reg_to_bin(std::string* output, const std::string &str) {
     if (str.length() != 2 || str[0] != 'r') {
         std::cout<<"Compiler Error: Wrong register: "<<str<<" r0, r1... expected"<<std::endl;
@@ -65,6 +73,14 @@ BOOST_AUTO_TEST_CASE( tc_reg_to_bin ) // tc = Testcase
         BOOST_TEST_REQUIRE( output == int_to_binary_string(i, 3) );
         output.clear();
     }
+}
+
+BOOST_AUTO_TEST_CASE( tc_is_bin )
+{
+    BOOST_TEST_REQUIRE( is_bin("00101110101") == true );
+    BOOST_TEST_REQUIRE( is_bin("00101210101") == false );
+    BOOST_TEST_REQUIRE( is_bin("I0101010101") == false );
+    BOOST_TEST_REQUIRE( is_bin("1010101010b") == false );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
