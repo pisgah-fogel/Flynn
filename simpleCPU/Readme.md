@@ -42,3 +42,10 @@ Instruction shortname |  bits (MSB - LSB) | Operation
 - gtkwave
 - python (V3)
 - bash
+
+## Reference
+- OpenRisc https://github.com/openrisc/mor1kx: better standard
+- OpenRisc https://github.com/openrisc/or1200
+- RISCV https://github.com/cliffordwolf/picorv32
+- RISC-32 https://github.com/ZipCPU/zipcpu 
+- 
