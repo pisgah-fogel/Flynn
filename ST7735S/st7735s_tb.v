@@ -50,7 +50,7 @@ st7735s
      // SPI slave
      always
      begin
-        @(~w_spi_ss)
+        @(~w_spi_ss);
         @(posedge w_spi_clk);
         v_dc <= w_spi_dc;
         v_mosi[7] <= w_spi_mosi;
