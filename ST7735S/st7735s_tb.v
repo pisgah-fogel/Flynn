@@ -21,6 +21,10 @@ wire w_spi_mosi;
 wire w_spi_dc;
 wire w_spi_ss;
 
+reg v_dc = 1'b0;
+reg [7:0] v_mosi = 0;
+integer ii;
+
 // generate clock
 always
     #(c_CLOCK_PERIOD_NS/2) r_clk <= !r_clk;
@@ -43,6 +47,26 @@ st7735s
         .o_spi_ss(w_spi_ss)
      );
 
+     // SPI slave
+     always
+     begin
+        @(~w_spi_ss)
+        @(posedge w_spi_clk);
+        v_dc <= w_spi_dc;
+        v_mosi[7] <= w_spi_mosi;
+        for (ii=6; ii>=0; ii=ii-1)
+        begin
+            @(posedge w_spi_clk);
+            v_mosi[ii] <= w_spi_mosi;
+        end
+
+        #1;
+        if (v_dc == 1'b0)
+            $display("\n%0t Command 0x%0h", $time, v_mosi);
+        else
+            $display("%0t Argument 0x%0h", $time, v_mosi);
+     end
+
     // main test sequence
     initial
     begin
@@ -61,6 +85,8 @@ st7735s
         r_data_rdy <= 1'b1;
         @(posedge r_clk);
         r_data_rdy <= 1'b0;
+        
+        // Either just wait for transmission to finish and check the VCD
         @(posedge w_waiting);
 
         #(10000);
