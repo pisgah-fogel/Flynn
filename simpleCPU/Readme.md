@@ -17,6 +17,27 @@ You can use some RAM addresses as registers in order to implement
 GPIO, SPI, I2C or any interaction with others IPs...
 There is not AXI or WIshbone bus in this design
 
+## Verification
+
+Command: `./utils/launch_tests.sh`
+It requires `Icarus Verilog` and run a simulation for all testcases in `programs/`, compares results with `tests`. (Verilog testbench `./src/top_wrapper_tb.v` is common to all testcases)
+Pros	|	Cons
+--------------------
+Easy to run many testcases (system level)	|	Writing CSV reference results is boring
+Reference model can be used to generate cycle accurate reference CSV	|	
+
+Directory: `./verif`
+It uses `verilator` and a C testbench to run a single simulation per directory.
+Pros	|	Cons
+--------------------
+C++ is fun	|	Writing new testbenches and testing them it time consuming
+Interesting for specific (Unit) verification	|	Requires `verilator public` comment to access internal signals
+
+TODO: SystemC
+
+TODO: Cocotb
+
+TODO: Cocotb + UVM
 
 ## Instruction set
 Instruction shortname |  bits (MSB - LSB) | Operation
@@ -38,10 +59,7 @@ Instruction shortname |  bits (MSB - LSB) | Operation
         NOP           | 0 1 0 1 1 1 0 0 0 | No operation
 
 ## Requirements
-- iverilog
-- gtkwave
-- python (V3)
-- bash
+cf dependencies.sh
 
 ## Reference
 - OpenRisc https://github.com/openrisc/mor1kx: better standard
