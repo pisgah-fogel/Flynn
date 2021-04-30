@@ -5,3 +5,5 @@ rom.mem
 log.txt
 a.out
 **/obj_dir
+verif/ram/ram
+verif/reset_sync/reset_sync
