@@ -28,11 +28,10 @@ module cpu
 	input i_clk,
 	input i_rst,
 
-	output reg o_rom_en,
 	output wire [g_ROM_ADDR-1:0] o_rom_addr,
 	input [g_ROM_WIDTH-1:0] i_rom_data,
 
-	output reg o_ram_en,
+	output reg o_ram_en = 1'b0,
 	output wire o_ram_we,
 	output wire o_ram_re,
 	output wire [g_RAM_ADDR-1:0] o_ram_addr,
@@ -73,39 +72,45 @@ module cpu
 	assign w_r6 = r_gpr[6];
 	assign w_r7 = r_gpr[7];
 
-	assign o_rom_addr = r_pc; //[g_ROM_ADDR-1:0]
+	assign o_rom_addr = r_pc[g_ROM_ADDR-1:0];
 	assign w_instruction = i_rom_data;
-	assign o_ram_data = r_gpr[0]; // used in STR
+	assign o_ram_data = {1'b0, r_gpr[0]}; // used in STR
 	assign o_ram_re = !r_ram_we;
 	assign o_ram_we = r_ram_we;
-	assign o_ram_addr = {r_gpr[2], r_gpr[1]};
+	assign o_ram_addr = {r_gpr[2][2:0], r_gpr[1]};
 
 	// instruction decoder
-	always @ (posedge i_clk or i_rst)
+	always @ (posedge i_clk or posedge i_rst)
 	begin
-		if (i_rst == 1'b1)
+		if (i_rst == 1'b1) // asynchronous reset positive edge
 		begin
+			r_gpr[0] <= 8'h00;
+			r_gpr[1] <= 8'h00;
+			r_gpr[2] <= 8'h00;
+			r_gpr[3] <= 8'h00;
+			r_gpr[4] <= 8'h00;
+			r_gpr[5] <= 8'h00;
+			r_gpr[6] <= 8'h00;
+			r_gpr[7] <= 8'h00;
 			o_ram_en <= 1'b0;
-			o_rom_en <= 1'b0;
 			r_ram_we <= 1'b0;
 			r_pc <= 0;
 		end
-		else
+		else // clock positive edge
 		begin
 			o_ram_en <= 1'b1;
-			o_rom_en <= 1'b1;
 			r_ram_we <= 1'b0; // read by default
 			r_pc <= r_pc+1;
-			casex(w_instruction)
-				9'bxxxxxxxx_1: // LD
+			casez(w_instruction)
+				9'bzzzzzzzz_1: // LD
 				begin
 					r_gpr[0] <= w_instruction[8:1];
 				end
-				9'bxxx_xxx_100: // MOV
+				9'bzzz_zzz_100: // MOV
 				begin
 					r_gpr[w_instruction[8:6]] <= r_gpr[w_instruction[5:3]];
 				end
-				9'bxxx_xxx_110: // CMP
+				9'bzzz_zzz_110: // CMP
 				begin
 					if (r_gpr[w_instruction[8:6]] == r_gpr[w_instruction[5:3]])
 						r_FE <= 1'b1;
@@ -153,7 +158,7 @@ module cpu
 				end
 				9'b0011_1100_0: // NOT
 				begin
-					r_gpr[0] <= ! r_gpr[0];
+					r_gpr[0] <= ~r_gpr[0];
 				end
 				9'b0100_0100_0: // XOR
 				begin

@@ -1,0 +1,17 @@
+Register:
+R0 -> instruction pointer
+R1 -> 
+R2 -> 
+R3 -> 
+R4 -> 
+CF -> Carry flag
+
+nop
+ld (x1), x2
+ld x1, (x2)
+ld x1, x2
+inc x
+dec x
+rlc x # x<<1 bit7 copied to CF
+add x1 x2 # x1 = x1+x2
+halt

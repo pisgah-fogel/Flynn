@@ -1,0 +1,16 @@
+NOP
+LD 00000111 ; A
+MOV r1 r0
+LD 00001000 ; B
+OR ; r0 = r1 or r0 = 0x0f
+LD 11111111 ; A
+MOV r1 r0
+LD 11111111 ; B
+OR ; r0 = r1 or r0 = 0xff
+LD 10101010 ; A
+MOV r1 r0
+LD 10011100 ; B
+OR ; r0 = r1 or r0 = 0xbe
+NOP
+NOP
+NOP

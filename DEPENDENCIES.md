@@ -1,0 +1,4 @@
+- verilator
+- iverilog
+- yosys
+- gtkwave
