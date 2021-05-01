@@ -43,6 +43,9 @@ ram.mem:
 programs:
 	cd programs; ./compile.sh all; cd ../
 
+cocotb: ram.mem rom.mem
+	cd cocotb/ram; make ; cd ../..
+
 clean:
 	rm -f *.vcd
 	cd programs; ./compile.sh clean; cd ../
@@ -56,6 +59,7 @@ clean:
 	rm -f *.log
 	rm -f top_wrapper.blif
 	rm -rf tests/__pycache__/
+	cd cocotb/ram; make clean_all; cd ../..
 
 synthesis:
 	yosys -p "synth_ice40 -blif cpu.blif" src/cpu.v
