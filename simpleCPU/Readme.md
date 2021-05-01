@@ -18,34 +18,37 @@ GPIO, SPI, I2C or any interaction with others IPs...
 There is not AXI or WIshbone bus in this design
 
 ## Verification
+
+### System / Icarus Verilog
 Command: `./utils/launch_tests.sh`
-
 It requires `Icarus Verilog` and run a simulation for all testcases in `programs/`, compares results with `tests`. (Verilog testbench `./src/top_wrapper_tb.v` is common to all testcases)
-Pros	|	Cons
---------------------
-Easy to run many testcases (system level)	|	Writing CSV reference results is boring
-Reference model can be used to generate cycle accurate reference CSV	|	
-
+| Pros	                                                                   |	Cons    |
+| ------------------------------------------------------------------------ | ---------------------------------------------- |
+Easy to run many testcases (system level)	                           |	Writing CSV reference results is boring |
+Reference model can be used to generate cycle accurate reference CSV	   |	 |
+  
+### Unit / Verilator (C++)
 Directory: `./verif`
-
 It uses `verilator` and a C testbench to run a single simulation per directory.
-Pros	|	Cons
---------------------
-C++ is fun	|	Writing new testbenches and testing them it time consuming
-Interesting for specific (Unit) verification	|	Requires `verilator public` comment to access internal signals
-
+| Pros	                                                                   |	Cons    |
+| ------------------------------------------------------------------------ | ---------------------------------------------- |
+| C++ is fun	|	Writing new testbenches and testing them it time consuming |
+| Interesting for specific (Unit) verification	|	Requires `verilator public` comment to access internal signals |
+  
+### Unit / Cocotb (Python + Verilator or ICarus Verilog or ...)
 Directory: `./cocotb`
-
 It uses `cocotb`(And Verilator or ICarus Verilog) and a Python testbench to run a single simulation per directory.
 You can run `make cocotb` to try it.
-Pros	|	Cons
---------------------
-Simulator independant	|	Writing new testbenches and testing them it time consuming
-Interesting for specific (Unit) verification	|	
+| Pros	                                                                   |	Cons    |
+| ------------------------------------------------------------------------ | ---------------------------------------------- |
+| Simulator independant	|	Writing new testbenches and testing them it time consuming |
+| Interesting for specific (Unit) verification	|	|
+  
+### Unit / Cocotb + UVM
+TODO
 
-TODO: Cocotb + UVM
-
-TODO: SystemC
+### Systemc
+TODO
 
 ## Instruction set
 Instruction shortname |  bits (MSB - LSB) | Operation
