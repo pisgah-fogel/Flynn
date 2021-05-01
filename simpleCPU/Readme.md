@@ -18,8 +18,8 @@ GPIO, SPI, I2C or any interaction with others IPs...
 There is not AXI or WIshbone bus in this design
 
 ## Verification
-
 Command: `./utils/launch_tests.sh`
+
 It requires `Icarus Verilog` and run a simulation for all testcases in `programs/`, compares results with `tests`. (Verilog testbench `./src/top_wrapper_tb.v` is common to all testcases)
 Pros	|	Cons
 --------------------
@@ -27,17 +27,25 @@ Easy to run many testcases (system level)	|	Writing CSV reference results is bor
 Reference model can be used to generate cycle accurate reference CSV	|	
 
 Directory: `./verif`
+
 It uses `verilator` and a C testbench to run a single simulation per directory.
 Pros	|	Cons
 --------------------
 C++ is fun	|	Writing new testbenches and testing them it time consuming
 Interesting for specific (Unit) verification	|	Requires `verilator public` comment to access internal signals
 
-TODO: SystemC
+Directory: `./cocotb`
 
-TODO: Cocotb
+It uses `cocotb`(And Verilator or ICarus Verilog) and a Python testbench to run a single simulation per directory.
+You can run `make cocotb` to try it.
+Pros	|	Cons
+--------------------
+Simulator independant	|	Writing new testbenches and testing them it time consuming
+Interesting for specific (Unit) verification	|	
 
 TODO: Cocotb + UVM
+
+TODO: SystemC
 
 ## Instruction set
 Instruction shortname |  bits (MSB - LSB) | Operation
