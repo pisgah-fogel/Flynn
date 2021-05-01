@@ -41,22 +41,21 @@ FPGA in my possession: Xilinx Spartan6, Altera Cyclone II
 ## GuidelLines
 
 CPU I would like to develop:
-[ ] SISD - a basic 8b CPU
-[ ] Pipeline acceleration (in-order)
-[ ] Pipeline acceleration + tomasulo algorithm (cf [Out of order
+- [ ] SISD - a basic 8b CPU
+- [ ] Pipeline acceleration (in-order)
+- [ ] Pipeline acceleration + tomasulo algorithm (cf [Out of order
 execution](https://en.wikipedia.org/wiki/Out-of-order_execution)
-[ ] Stack - a 8b stack based CPU
-[ ] Vectorial
-[ ] SuperScalar
-[ ] SIMD
-[ ] SIMD + FPU
-[ ] MultiThread
-[ ] Many cores
-[ ] VLIW - Very Long Instruction Word (cf [Super Harvard Architecture
+- [ ] Stack - a 8b stack based CPU
+- [ ] Vectorial
+- [ ] SuperScalar
+- [ ] SIMD
+- [ ] SIMD + FPU
+- [ ] MultiThread
+- [ ] Many cores
+- [ ] VLIW - Very Long Instruction Word (cf [Super Harvard Architecture
 Single-Chip
 Computer](https://en.wikipedia.org/wiki/Super_Harvard_Architecture_Single-Chip_Computer)
-[ ] [SIMT](https://en.wikipedia.org/wiki/Single\_instruction,\_multiple\_threads) - Single Instruction Multiple Thread = SIMD + Threading
-[ ] 
+- [ ] [SIMT](https://en.wikipedia.org/wiki/Single\_instruction,\_multiple\_threads) - Single Instruction Multiple Thread = SIMD + Threading
 
 ## Interesting reference
 - [GPGPU](https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units)
