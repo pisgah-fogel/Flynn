@@ -1,4 +1,5 @@
 This is a first attempt at using UVM for RAM verification in simpleCPU.
+This does not use Transaction-Level Components (TLC)
 
 ## Resource
  - https://github.com/tpoikela/uvm-python/tree/master/test/examples/integrated/ubus/py
@@ -32,8 +33,8 @@ This is a first attempt at using UVM for RAM verification in simpleCPU.
 					checks
 					covergroups
 ### My implementation
-ram_env
-	`test_ram`
+`test_ram`
+	ram_env
 		ram_tb
 			ram_scoreboard -> sequence (1)
 			ram_env
@@ -42,3 +43,7 @@ ram_env
 				ram_driver <- sequence (2)
 				ram_monitor
 
+## Note to myself
+Next time start by writing the sequence item: ram_sequence
+Then ram_driver
+Then ram_monitor
