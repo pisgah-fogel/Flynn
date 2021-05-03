@@ -45,5 +45,5 @@ This does not use Transaction-Level Components (TLC)
 
 ## Note to myself
 Next time start by writing the sequence item: ram_sequence
-Then ram_driver
-Then ram_monitor
+Then ram_driver / ram_monitor / ram_sequencer
+
