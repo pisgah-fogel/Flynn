@@ -13,9 +13,9 @@ class ram_driver(UVMDriver):
     Is in charge of driving the Unit Under Test (ram)
     """
     def __init__(self, name, parent=None):
-        super().__init__(name, parent)
+        UVMDriver.__init__(self, name, parent)
         self.trig = Event("trans_exec")
-        self.sigs = None # Will fetch signals from the Agent in build_phase
+        self.sigs = None # Will fetch it from the Agent in build_phase
         self.cfg = None # Config
         self.tag = "RAM_DRIVER"
 

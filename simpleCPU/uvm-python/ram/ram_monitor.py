@@ -16,7 +16,7 @@ class ram_monitor(UVMMonitor):
     """
     
     def __init__(self, name, parent=None):
-        super().__init__(name, parent)
+        UVMMonitor.__init__(self, name, parent)
         self.ap = UVMAnalysisPort("ap", self)
         self.sigs = None # Passive
         self.cfg = None

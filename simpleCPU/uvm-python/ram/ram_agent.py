@@ -17,8 +17,10 @@ class ram_agent(UVMAgent):
         self.mon = None # ram_monitor
         self.vif = None
         self.error = False
+        self.master_id = 0
 
     def build_phase(self, phase):
+        super().build_phase(phase)
         self.sqr = ram_sequencer.type_id.create("sqr", self)
         self.drv = ram_driver.type_id.create("drv", self)
         self.mon = ram_monitor.type_id.create("mon", self)
@@ -28,6 +30,8 @@ class ram_agent(UVMAgent):
             self.vif = arr[0]
         if self.vif is None:
             uvm_fatal("RAM/AGT/NOVIF", "No virtual interface speficied")
+
+        UVMConfigDb.set(self, "", "master_id", self.master_id)
 
     def connect_phase(self, phase):
         # Connect Driver to Sequencer
